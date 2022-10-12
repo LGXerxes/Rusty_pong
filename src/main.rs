@@ -62,7 +62,6 @@ struct MainState {
     player_1_score: i32,
     player_2_score: i32,
 }
-
 impl MainState {
     pub fn new(ctx: &mut Context) -> Self {
         let (screen_w, screen_h) = graphics::drawable_size(ctx);
@@ -118,7 +117,6 @@ impl event::EventHandler for MainState {
             self.ball_vel.y *= -1.0;
             self.ball_vel *= BALL_SPEED_MULTI;
         }
-
         let intersetcs_player_1 = self.ball_pos.x - BALL_SIZE_HALF
             < self.player_1_pos.x + RACKET_WIDTH_HALF
             && self.ball_pos.x + BALL_SIZE_HALF > self.player_1_pos.x - RACKET_WIDTH_HALF
@@ -126,16 +124,23 @@ impl event::EventHandler for MainState {
             && self.ball_pos.y + BALL_SIZE_HALF > self.player_1_pos.y - RACKET_HEIGHT_HALF;
 
         if intersetcs_player_1 {
-            self.ball_vel.x *= -1.0
+            self.ball_vel.x *= -1.0;
+            self.ball_pos.x = self.player_1_pos.x + RACKET_WIDTH_HALF + BALL_SIZE_HALF;
         }
-        let intersetcs_player_2 = self.ball_pos.x - BALL_SIZE_HALF
-            < self.player_2_pos.x + RACKET_WIDTH_HALF
-            && self.ball_pos.x + BALL_SIZE_HALF > self.player_2_pos.x - RACKET_WIDTH_HALF
+
+        /*       let intersetcs_player_2 = self.ball_pos.x - BALL_SIZE_HALF
+        < self.player_2_pos.x + RACKET_WIDTH_HALF
+        && self.ball_pos.x + BALL_SIZE_HALF > self.player_2_pos.x - RACKET_WIDTH_HALF
+        && self.ball_pos.y - BALL_SIZE_HALF < self.player_2_pos.y + RACKET_HEIGHT_HALF
+        && self.ball_pos.y + BALL_SIZE_HALF > self.player_2_pos.y - RACKET_HEIGHT_HALF; */
+
+        let intersetcs_player_2 = self.ball_pos.x + BALL_SIZE_HALF
+            > self.player_2_pos.x - RACKET_HEIGHT_HALF
             && self.ball_pos.y - BALL_SIZE_HALF < self.player_2_pos.y + RACKET_HEIGHT_HALF
             && self.ball_pos.y + BALL_SIZE_HALF > self.player_2_pos.y - RACKET_HEIGHT_HALF;
-
         if intersetcs_player_2 {
-            self.ball_vel.x *= -1.0
+            self.ball_vel.x *= -1.0;
+            self.ball_pos.x = self.player_2_pos.x - RACKET_WIDTH_HALF - BALL_SIZE_HALF;
         }
 
         Ok(())
